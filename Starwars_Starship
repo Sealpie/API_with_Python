@@ -1,0 +1,30 @@
+#STARSHIP_API
+import requests
+import time
+import pandas as pd
+
+names = []
+models = []
+crews = []
+
+for i in range(9, 19):
+    url = f"https://swapi.dev/api/starships/{i}/"
+    resp = requests.get(url)
+    
+    try:
+        result = resp.json()
+        names.append(result['name'])
+        models.append(result['model'])
+        crews.append(result['crew'])
+    except KeyError:
+        print(f"Error: [{i}]Data not found.")
+    
+    time.sleep(1) #second
+
+Starship_df = pd.DataFrame({
+    "name": names,
+    "model": models,
+    "crew": crews
+})
+#StarShip_DataFrame.
+Starship_df
