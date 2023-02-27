@@ -1,0 +1,26 @@
+#COVID-19_API
+import requests
+import pandas as pd
+
+url = "https://covid-19-statistics.p.rapidapi.com/reports"
+
+headers = {
+    "X-RapidAPI-Key": "5166e58e1bmshcc23ef023fbb504p1f448djsnf9ab9ab0dfd9",
+    "X-RapidAPI-Host": "covid-19-statistics.p.rapidapi.com"
+}
+
+response = requests.get(url, headers=headers)
+data = response.json()
+
+#Total_Statistics
+df = pd.json_normalize(data['data'])
+df
+
+#Select Region = USA
+covid_usa_df = df[df['region.iso'] == 'USA'][['date', 'confirmed', 'deaths', 'region.iso', 'region.name', 'region.province']]
+
+#Sort Confirmed case
+covid_usa_df = covid_usa_df.sort_values(["confirmed"], ascending=False)
+
+#Top 10 Confirmed case of covid-19
+covid_usa_df.head(10)
