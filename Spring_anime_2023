@@ -1,0 +1,33 @@
+#Web Scrape and Build DataFrame
+#install gazpacho
+!pip install gazpacho
+
+#Spring_anime_2023
+import pandas as pd
+from gazpacho import Soup
+from requests import get
+
+url = "https://myanimelist.net/anime/season/2023/spring"
+
+try:
+    resp = get(url)
+    resp.status_code
+except Exception as e:
+    print("Error to request:", e)
+    exit()
+#titles_list
+anime_spring = Soup(resp.text)
+titles = anime_spring.find("h2", {'class':'h2_anime_title'})
+clean_titles = [title.text.strip() for title in titles]
+
+#Release_Date
+dates = anime_spring.find("div",{'class':'prodsrc'})
+dates = [date.text.strip() for date in dates]
+
+#Build_DataFrame
+spring_anime = pd.DataFrame({
+    "title": clean_titles,
+    "release date": dates
+})
+
+spring_anime.head(10)
